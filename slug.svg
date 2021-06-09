@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733335"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="slug.svg"
+   inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug_highlight.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="121.21899"
+     inkscape:cy="100.95968"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-text-baseline="true"
+     inkscape:snap-page="true"
+     inkscape:window-width="1858"
+     inkscape:window-height="1057"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g850"
+       style="fill:#ff00ff;fill-opacity:1">
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.511111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path833"
+         cx="33.90799"
+         cy="36.354572"
+         r="19.038538"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.202737px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 14.869451,36.354571 c 0,0 0.972781,11.074068 -0.409591,16.091565 -1.382371,5.017497 -2.611146,4.915098 -4.5567055,3.327931 0.9215815,2.457549 1.7919625,5.375888 4.3007115,5.939077 2.508748,0.563188 4.607905,0.153598 5.631884,-0.716785 1.023978,-0.870382 3.071936,-2.252753 5.27349,-1.177576 2.201555,1.075178 2.099157,3.737522 4.8639,3.020738 2.764743,-0.716784 4.403109,-1.99676 6.143874,-2.918339 1.740762,-0.921582 1.996757,0.255994 3.993516,1.331172 1.99676,1.075177 5.478287,2.867139 6.809459,1.279973 1.331172,-1.587167 2.559947,-3.225533 4.300712,-2.457549 1.740763,0.767983 4.403109,3.481527 6.963055,-0.614388 -2.764742,0.307193 -5.580683,-1.740762 -5.887877,-6.911858 -0.307194,-5.171092 0.594359,-14.731054 0.594359,-14.731054"
+         id="path835"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.343709px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 25.980046,23.462856 c 0,0 2.30369,-15.1560651 -3.711218,-16.6291039 -6.014907,-1.4730385 -7.365194,1.3502856 -7.365194,1.3502856 L 12.816831,6.4654926 c 0,0 5.892154,-4.2963625 10.065764,-1.8412982 4.173608,2.4550643 6.459611,6.5177206 6.789648,16.2706996 0.330037,9.752984 -3.692197,2.567962 -3.692197,2.567962 z"
+         id="path837"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.687418;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path839"
+         cx="13.860232"
+         cy="7.3247657"
+         r="4.1736093"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.343709px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 38.749088,20.013114 c 0,0 0.07572,-12.9196325 3.512813,-14.883684 3.43709,-1.9640515 5.401139,-1.1047791 7.733453,0.2455066 2.332309,1.3502852 -0.245509,2.3323109 -0.245509,2.3323109 0,0 -3.314334,-2.8233241 -6.137659,-0.4910127 -2.823325,2.3323117 -2.46484,19.5988112 -2.46484,19.5988112"
+         id="path841"
+         sodipodi:nodetypes="csscsc"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.687418;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path839-3"
+         cx="49.749844"
+         cy="7.7072477"
+         r="4.1736093"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+    </g>
+    <g
+       id="g850-8"
+       style="fill:#ff00ff;fill-opacity:1">
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.511111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path833-3"
+         cx="33.90799"
+         cy="36.354572"
+         r="19.038538"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.202737px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 14.869451,36.354571 c 0,0 0.972781,11.074068 -0.409591,16.091565 -1.382371,5.017497 -2.611146,4.915098 -4.5567055,3.327931 0.9215815,2.457549 1.7919625,5.375888 4.3007115,5.939077 2.508748,0.563188 4.607905,0.153598 5.631884,-0.716785 1.023978,-0.870382 3.071936,-2.252753 5.27349,-1.177576 2.201555,1.075178 2.099157,3.737522 4.8639,3.020738 2.764743,-0.716784 4.403109,-1.99676 6.143874,-2.918339 1.740762,-0.921582 1.996757,0.255994 3.993516,1.331172 1.99676,1.075177 5.478287,2.867139 6.809459,1.279973 1.331172,-1.587167 2.559947,-3.225533 4.300712,-2.457549 1.740763,0.767983 4.403109,3.481527 6.963055,-0.614388 -2.764742,0.307193 -5.580683,-1.740762 -5.887877,-6.911858 -0.307194,-5.171092 0.594359,-14.731054 0.594359,-14.731054"
+         id="path835-5"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.343709px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 25.980046,23.462856 c 0,0 2.30369,-15.1560651 -3.711218,-16.6291039 -6.014907,-1.4730385 -7.365194,1.3502856 -7.365194,1.3502856 L 12.816831,6.4654926 c 0,0 5.892154,-4.2963625 10.065764,-1.8412982 4.173608,2.4550643 6.459611,6.5177206 6.789648,16.2706996 0.330037,9.752984 -3.692197,2.567962 -3.692197,2.567962 z"
+         id="path837-5"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.687418;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path839-4"
+         cx="13.860232"
+         cy="7.3247657"
+         r="4.1736093"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <path
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.343709px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 38.749088,20.013114 c 0,0 0.07572,-12.9196325 3.512813,-14.883684 3.43709,-1.9640515 5.401139,-1.1047791 7.733453,0.2455066 2.332309,1.3502852 -0.245509,2.3323109 -0.245509,2.3323109 0,0 -3.314334,-2.8233241 -6.137659,-0.4910127 -2.823325,2.3323117 -2.46484,19.5988112 -2.46484,19.5988112"
+         id="path841-5"
+         sodipodi:nodetypes="csscsc"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.687418;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10"
+         id="path839-3-4"
+         cx="49.749844"
+         cy="7.7072477"
+         r="4.1736093"
+         inkscape:export-filename="E:\dev\ktane_slugs_and_the_river\Assets\SlugsAndTheRiver\Textures\slug.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" />
+    </g>
+  </g>
+</svg>
