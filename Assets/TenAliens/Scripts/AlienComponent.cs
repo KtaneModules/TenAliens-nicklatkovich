@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SlugComponent : MonoBehaviour {
+public class AlienComponent : MonoBehaviour {
 	public GameObject RealHighlight;
 	public Renderer Renderer;
 	public KMSelectable Selectable;
@@ -23,8 +23,8 @@ public class SlugComponent : MonoBehaviour {
 		}
 	}
 
-	private SlugsAndTheRiverPuzzle.Slug _data;
-	public SlugsAndTheRiverPuzzle.Slug data {
+	private TenAliensPuzzle.Alien _data;
+	public TenAliensPuzzle.Alien data {
 		get { return _data; }
 		set {
 			_data = value;

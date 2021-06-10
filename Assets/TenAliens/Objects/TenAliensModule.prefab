@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 114206331905511074}
   - component: {fileID: 114459826599361544}
   m_Layer: 0
-  m_Name: SlugsAndTheRiver
+  m_Name: TenAliensModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4674540238737532}
   m_Layer: 0
-  m_Name: Slugs
+  m_Name: Aliens
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -992,8 +992,8 @@ MonoBehaviour:
   m_Script: {fileID: -119419473, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModuleType: slugs_and_the_river
-  ModuleDisplayName: SlugsAndTheRiver
+  ModuleType: ten_aliens
+  ModuleDisplayName: Ten Aliens
   RequiresTimerVisibility: 0
 --- !u!114 &114206331905511074
 MonoBehaviour:
@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd8c85cdba736949b710a4f9757322a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SlugsContainer: {fileID: 1388040986276162}
+  AliensContainer: {fileID: 1388040986276162}
   Energy: {fileID: 102100851651142530}
   Selectable: {fileID: 114892412014767664}
   ResetButton: {fileID: 114229763354119562}

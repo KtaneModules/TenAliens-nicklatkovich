@@ -2,41 +2,41 @@
 using System.Linq;
 using UnityEngine;
 
-public class SlugsAndTheRiverPuzzle {
-	public struct Slug {
+public class TenAliensPuzzle {
+	public struct Alien {
 		public bool red;
 		public bool green;
 		public bool blue;
 		public int level;
 		public int id;
 		public Color color { get { return new Color(red ? 1f : 0f, green ? 1f : 0f, blue ? 1f : 0f); } }
-		public Slug(int id, int level) {
+		public Alien(int id, int level) {
 			this.id = id;
 			this.level = level;
 			this.red = level / 4 > 0;
 			this.green = level % 4 / 2 > 0;
 			this.blue = level % 2 > 0;
 		}
-		public bool conflict(Slug other) {
+		public bool conflict(Alien other) {
 			return (red && other.red) || (green && other.green) || (blue && other.blue);
 		}
 	}
 
 	private class SaR {
-		public HashSet<Slug> south = new HashSet<Slug>();
-		public HashSet<Slug> north = new HashSet<Slug>();
+		public HashSet<Alien> south = new HashSet<Alien>();
+		public HashSet<Alien> north = new HashSet<Alien>();
 		public int usedEnergy = 0;
-		public void transfer(int slugLevel, int usedEnergy = 8) {
-			Debug.Log(string.Format("transfer {0} for {1}", slugLevel, usedEnergy));
-			Slug slug = south.First(s => s.level == slugLevel);
-			south.Remove(slug);
-			north.Add(slug);
+		public void transfer(int alienLevel, int usedEnergy = 8) {
+			Debug.Log(string.Format("transfer {0} for {1}", alienLevel, usedEnergy));
+			Alien alien = south.First(s => s.level == alienLevel);
+			south.Remove(alien);
+			north.Add(alien);
 			this.usedEnergy += usedEnergy;
 		}
-		public void pull(int slugLevel, int bySlugLevel) {
-			Debug.Log(string.Format("pulling {0} by {1}", slugLevel, bySlugLevel));
-			Debug.Assert(north.Any(s => s.level == bySlugLevel));
-			transfer(slugLevel, 8 - bySlugLevel);
+		public void pull(int alienLevel, int byAlienLevel) {
+			Debug.Log(string.Format("pulling {0} by {1}", alienLevel, byAlienLevel));
+			Debug.Assert(north.Any(s => s.level == byAlienLevel));
+			transfer(alienLevel, 8 - byAlienLevel);
 		}
 	}
 
@@ -47,9 +47,9 @@ public class SlugsAndTheRiverPuzzle {
 		return use >= notUse;
 	}
 
-	public static int Generate(Slug[] slugs) {
+	public static int Generate(Alien[] aliens) {
 		SaR sar = new SaR();
-		foreach (Slug slug in slugs) sar.south.Add(slug);
+		foreach (Alien alien in aliens) sar.south.Add(alien);
 		if (sar.south.Any(s => s.level == 6)) {
 			sar.transfer(6);
 			if (sar.south.Any(s => s.level == 1)) {
@@ -118,12 +118,12 @@ public class SlugsAndTheRiverPuzzle {
 	}
 
 	public readonly int initialEnergy;
-	public readonly int slugsCount;
+	public readonly int aliensCount;
 
 	public int energy;
 	public int[] initialLevels;
-	public HashSet<Slug> northSlugs;
-	public HashSet<Slug> southSlugs;
+	public HashSet<Alien> northAliens;
+	public HashSet<Alien> southAliens;
 
 	public static int GetRandomLevel() {
 		if (Random.Range(0, 3) == 0) {
@@ -136,34 +136,34 @@ public class SlugsAndTheRiverPuzzle {
 		return 1;
 	}
 
-	public SlugsAndTheRiverPuzzle(int slugsCount) {
-		this.slugsCount = slugsCount;
-		southSlugs = new HashSet<Slug>(Enumerable.Range(0, slugsCount).Select(i => new Slug(i, GetRandomLevel())));
-		northSlugs = new HashSet<Slug>();
-		initialEnergy = Generate(southSlugs.ToArray());
+	public TenAliensPuzzle(int aliensCount) {
+		this.aliensCount = aliensCount;
+		southAliens = new HashSet<Alien>(Enumerable.Range(0, aliensCount).Select(i => new Alien(i, GetRandomLevel())));
+		northAliens = new HashSet<Alien>();
+		initialEnergy = Generate(southAliens.ToArray());
 		energy = initialEnergy;
 	}
 
-	public bool transfer(int slugId) {
-		Slug slug = southSlugs.First(s => s.id == slugId);
-		southSlugs.Remove(slug);
-		northSlugs.Add(slug);
+	public bool transfer(int alienId) {
+		Alien alien = southAliens.First(s => s.id == alienId);
+		southAliens.Remove(alien);
+		northAliens.Add(alien);
 		energy -= 8;
-		return southSlugs.Count == 0 && energy >= 0;
+		return southAliens.Count == 0 && energy >= 0;
 	}
 
-	public bool pull(int slugId, int bySlugId) {
-		Slug slug = southSlugs.First(s => s.id == slugId);
-		Slug bySlug = northSlugs.First(s => s.id == bySlugId);
-		southSlugs.Remove(slug);
-		northSlugs.Add(slug);
-		energy -= 8 - bySlug.level;
-		return southSlugs.Count == 0 && energy >= 0;
+	public bool pull(int alienId, int byAlienId) {
+		Alien alien = southAliens.First(s => s.id == alienId);
+		Alien byAlien = northAliens.First(s => s.id == byAlienId);
+		southAliens.Remove(alien);
+		northAliens.Add(alien);
+		energy -= 8 - byAlien.level;
+		return southAliens.Count == 0 && energy >= 0;
 	}
 
 	public void reset() {
-		foreach (Slug slug in northSlugs) southSlugs.Add(slug);
-		northSlugs = new HashSet<Slug>();
+		foreach (Alien alien in northAliens) southAliens.Add(alien);
+		northAliens = new HashSet<Alien>();
 		energy = initialEnergy;
 	}
 }

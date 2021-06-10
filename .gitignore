@@ -26,7 +26,7 @@ Assembly-CSharp*
 obj/
 Models/*
 
-# SlugsAndTheRiver
-!Assets/SlugsAndTheRiver.meta
-!Assets/SlugsAndTheRiver/
-!Manual/img/Component/Slugs and the River.svg
+# TenAliens
+!Assets/TenAliens.meta
+!Assets/TenAliens/
+!Manual/img/Component/Ten Aliens.svg
