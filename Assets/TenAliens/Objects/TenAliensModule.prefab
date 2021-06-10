@@ -1120,7 +1120,7 @@ MonoBehaviour:
   ResetButton: {fileID: 114229763354119562}
   Module: {fileID: 114040184626997242}
   Audio: {fileID: 114459826599361544}
-  SlugPrefab: {fileID: 114721326807081568, guid: c9aff33668c686f429b8712e8fb707f0,
+  AlienPrefab: {fileID: 114721326807081568, guid: c9aff33668c686f429b8712e8fb707f0,
     type: 2}
 --- !u!114 &114892412014767664
 MonoBehaviour:
