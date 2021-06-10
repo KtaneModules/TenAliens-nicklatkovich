@@ -5,7 +5,12 @@ using UnityEngine;
 public class SlugsAndTheRiverModule : MonoBehaviour {
 	private const float HOLDING = .5f;
 	private const float SLUG_TRANSFER_LENGTH = .075f;
+	private const string SOLVING_SOUND = "alien_solved";
 	private readonly Vector3 SLUGS_OFFSET = new Vector3(.025f, .001f, .025f);
+	private readonly string[] ALIEN_CLICK_SOUNDS = new[] { "alien_click_1", "alien_click_2", "alien_click_3" };
+	private readonly string[] ALIEN_PULL_SOUNDS = new[] { "alien_click_1", "alien_click_2", "alien_click_3" };
+	private readonly string[] ALIEN_SELF_TRANSFER_SOUNDS = new[] { "alien_self_transfer_1", "alien_self_transfer_2", "alien_self_transfer_3" };
+	private readonly string[] ALIEN_STRIKE_SOUNDS = new[] { "alien_strike_1", "alien_strike_2" };
 
 	private static Color SlugLevelToColor(int level) {
 		return new Color(level / 4, level % 4 / 2, level % 2);
@@ -16,6 +21,7 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 	public KMSelectable Selectable;
 	public KMSelectable ResetButton;
 	public KMBombModule Module;
+	public KMAudio Audio;
 	public SlugComponent SlugPrefab;
 
 	private bool solved;
@@ -65,15 +71,18 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 	private void HoldSlug(SlugComponent slug) {
 		holdingTimer = Time.time + HOLDING;
 		holdedSlug = slug;
+		if (puzzle.southSlugs.Any(s => s.id == holdedSlug.data.id)) PlayClick(holdedSlug.transform);
 	}
 
 	private void HoldReset() {
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
 		holdingTimer = Time.time + HOLDING;
 		resetHolded = true;
 	}
 
 	private void UnholdReset(bool forceHold = false) {
 		if (!resetHolded) return;
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonRelease, transform);
 		bool tap = forceHold ? false : holdingTimer > Time.time;
 		holdingTimer = 0;
 		if (tap) return;
@@ -82,9 +91,11 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 		if (solved && puzzle.southSlugs.Count == 0 && puzzle.energy >= 0) {
 			puzzle = new SlugsAndTheRiverPuzzle(10);
 			foreach (SlugsAndTheRiverPuzzle.Slug data in puzzle.southSlugs) slugs[data.id].data = data;
-		} else puzzle.reset();
+		} else {
+			puzzle.reset();
+			Strike();
+		}
 		Energy.text = puzzle.energy.ToString();
-		Strike();
 	}
 
 	private void UnholdSlug(bool forceHold = false) {
@@ -97,10 +108,12 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 				selectedSlug = holdedSlug;
 				selectedSlug.selected = true;
 				holdedSlug = null;
+				PlayClick(selectedSlug.transform);
 				return;
 			}
 			if (selectedSlug == holdedSlug) {
 				selectedSlug.selected = false;
+				PlayClick(selectedSlug.transform);
 				selectedSlug = null;
 				holdedSlug = null;
 				return;
@@ -109,6 +122,7 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 				selectedSlug.selected = false;
 				selectedSlug = holdedSlug;
 				selectedSlug.selected = true;
+				PlayClick(selectedSlug.transform);
 				holdedSlug = null;
 				return;
 			}
@@ -119,6 +133,7 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 				Strike();
 				return;
 			}
+			PlayPull(holdedSlug.transform);
 			puzzle.pull(holdedSlug.data.id, selectedSlug.data.id);
 			selectedSlug.selected = false;
 			selectedSlug = null;
@@ -129,6 +144,7 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 			return;
 		}
 		if (puzzle.southSlugs.Any(s => s.id == holdedSlug.data.id)) {
+			PlayStartSelfTransfer(holdedSlug.transform);
 			puzzle.transfer(holdedSlug.data.id);
 			holdedSlug.transform.localPosition += Vector3.forward * SLUG_TRANSFER_LENGTH;
 			holdedSlug = null;
@@ -143,13 +159,28 @@ public class SlugsAndTheRiverModule : MonoBehaviour {
 	}
 
 	private void Strike() {
+		Audio.PlaySoundAtTransform(ALIEN_STRIKE_SOUNDS.PickRandom(), transform);
 		if (solved) return;
 		Module.HandleStrike();
 	}
 
 	private void Solve() {
+		Audio.PlaySoundAtTransform(SOLVING_SOUND, transform);
 		if (solved) return;
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 		solved = true;
 		Module.HandlePass();
+	}
+
+	private void PlayClick(Transform transform) {
+		Audio.PlaySoundAtTransform(ALIEN_CLICK_SOUNDS.PickRandom(), transform);
+	}
+
+	private void PlayPull(Transform transform) {
+		Audio.PlaySoundAtTransform(ALIEN_PULL_SOUNDS.PickRandom(), transform);
+	}
+
+	private void PlayStartSelfTransfer(Transform transform) {
+		Audio.PlaySoundAtTransform(ALIEN_SELF_TRANSFER_SOUNDS.PickRandom(), transform);
 	}
 }

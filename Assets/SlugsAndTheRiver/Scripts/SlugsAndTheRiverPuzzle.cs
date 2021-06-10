@@ -54,7 +54,7 @@ public class SlugsAndTheRiverPuzzle {
 			sar.transfer(6);
 			if (sar.south.Any(s => s.level == 1)) {
 				do { sar.pull(1, 6); } while (sar.south.Any(s => s.level == 1));
-				while (sar.south.Any(s => s.level == 1)) sar.pull(6, 1);
+				while (sar.south.Any(s => s.level == 6)) sar.pull(6, 1);
 				if (sar.south.Any(s => s.level == 4)) {
 					sar.pull(4, 1);
 					while (sar.south.Any(s => s.level == 3)) sar.pull(3, 4);
