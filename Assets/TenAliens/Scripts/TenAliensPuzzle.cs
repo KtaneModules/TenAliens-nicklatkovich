@@ -27,14 +27,14 @@ public class TenAliensPuzzle {
 		public HashSet<Alien> north = new HashSet<Alien>();
 		public int usedEnergy = 0;
 		public void transfer(int alienLevel, int usedEnergy = 8) {
-			Debug.Log(string.Format("transfer {0} for {1}", alienLevel, usedEnergy));
+			// Debug.Log(string.Format("transfer {0} for {1}", alienLevel, usedEnergy));
 			Alien alien = south.First(s => s.level == alienLevel);
 			south.Remove(alien);
 			north.Add(alien);
 			this.usedEnergy += usedEnergy;
 		}
 		public void pull(int alienLevel, int byAlienLevel) {
-			Debug.Log(string.Format("pulling {0} by {1}", alienLevel, byAlienLevel));
+			// Debug.Log(string.Format("pulling {0} by {1}", alienLevel, byAlienLevel));
 			Debug.Assert(north.Any(s => s.level == byAlienLevel));
 			transfer(alienLevel, 8 - byAlienLevel);
 		}
