@@ -12,6 +12,8 @@ public class TenAliensModule : MonoBehaviour {
 	private readonly string[] ALIEN_SELF_TRANSFER_SOUNDS = new[] { "alien_self_transfer_1", "alien_self_transfer_2", "alien_self_transfer_3" };
 	private readonly string[] ALIEN_STRIKE_SOUNDS = new[] { "alien_strike_1", "alien_strike_2" };
 
+	private static int moduleIdCounter = 1;
+
 	public GameObject AliensContainer;
 	public TextMesh Energy;
 	public KMSelectable Selectable;
@@ -22,6 +24,7 @@ public class TenAliensModule : MonoBehaviour {
 
 	private bool solved;
 	private bool resetHolded;
+	private int moduleId;
 	private float holdingTimer;
 	private AlienComponent holdedAlien;
 	private AlienComponent selectedAlien;
@@ -29,7 +32,8 @@ public class TenAliensModule : MonoBehaviour {
 	private TenAliensPuzzle puzzle;
 
 	private void Start() {
-		puzzle = new TenAliensPuzzle(10);
+		moduleId = moduleIdCounter++;
+		puzzle = new TenAliensPuzzle(10, (s) => Debug.LogFormat("[Ten Aliens #{0}] {1}", moduleId, s));
 		List<KMSelectable> children = new List<KMSelectable>();
 		List<AlienComponent> aliensList = new List<AlienComponent>();
 		for (int i = 0; i < 10; i++) {
@@ -49,6 +53,10 @@ public class TenAliensModule : MonoBehaviour {
 		children.Add(ResetButton);
 		Selectable.Children = children.ToArray();
 		Selectable.UpdateChildren();
+		Module.OnActivate += Activate;
+	}
+
+	private void Activate() {
 		Energy.text = puzzle.energy.ToString();
 		ResetButton.OnInteract += () => { HoldReset(); return false; };
 		ResetButton.OnInteractEnded += () => UnholdReset();
@@ -83,6 +91,7 @@ public class TenAliensModule : MonoBehaviour {
 		holdingTimer = 0;
 		if (tap) return;
 		if (puzzle.northAliens.Count == 0) return;
+		Debug.LogFormat("[Ten Aliens #{0}] Reset module", moduleId);
 		foreach (AlienComponent alien in aliens) SetAlienInitialPosition(alien);
 		if (solved && puzzle.southAliens.Count == 0 && puzzle.energy >= 0) {
 			puzzle = new TenAliensPuzzle(10);
@@ -124,6 +133,8 @@ public class TenAliensModule : MonoBehaviour {
 			}
 			if (holdedAlien.data.conflict(selectedAlien.data)) {
 				selectedAlien.selected = false;
+				Debug.LogFormat("[Ten Aliens #{0}] Trying to teleport conflicted aliens: #{1} ({2}) and #{3} ({4})", moduleId, selectedAlien.data.id + 1,
+					TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[selectedAlien.data.level]);
 				selectedAlien = null;
 				holdedAlien = null;
 				Strike();
@@ -131,6 +142,9 @@ public class TenAliensModule : MonoBehaviour {
 			}
 			PlayPull(holdedAlien.transform);
 			puzzle.pull(holdedAlien.data.id, selectedAlien.data.id);
+			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleported by alien #{3} ({4}). Energy cost: {5}. Left energy: {6}", moduleId, selectedAlien.data.id + 1,
+				TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[holdedAlien.data.level],
+				8 - selectedAlien.data.level, puzzle.energy);
 			selectedAlien.selected = false;
 			selectedAlien = null;
 			holdedAlien.transform.localPosition += Vector3.forward * ALIEN_TRANSFER_LENGTH;
@@ -142,6 +156,8 @@ public class TenAliensModule : MonoBehaviour {
 		if (puzzle.southAliens.Any(s => s.id == holdedAlien.data.id)) {
 			PlayStartSelfTransfer(holdedAlien.transform);
 			puzzle.transfer(holdedAlien.data.id);
+			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleport himself. Energy cost: {3}. Left energy: {4}", moduleId, holdedAlien.data.id + 1,
+				TenAliensPuzzle.aliensNames[holdedAlien.data.level], 8, puzzle.energy);
 			holdedAlien.transform.localPosition += Vector3.forward * ALIEN_TRANSFER_LENGTH;
 			holdedAlien = null;
 			Energy.text = puzzle.energy.ToString();
@@ -151,7 +167,7 @@ public class TenAliensModule : MonoBehaviour {
 
 	private void SetAlienInitialPosition(AlienComponent alien) {
 		int id = alien.data.id;
-		alien.transform.localPosition = new Vector3((id % 5 - 2f) * ALIENS_OFFSET.x, ALIENS_OFFSET.y, (id / 5 - .5f) * ALIENS_OFFSET.z - .04f);
+		alien.transform.localPosition = new Vector3((id % 5 - 2f) * ALIENS_OFFSET.x, ALIENS_OFFSET.y, -(id / 5 - .5f) * ALIENS_OFFSET.z - .04f);
 	}
 
 	private void Strike() {
@@ -161,6 +177,7 @@ public class TenAliensModule : MonoBehaviour {
 	}
 
 	private void Solve() {
+		Debug.LogFormat("[Ten Aliens #{0}] Solved", moduleId);
 		Audio.PlaySoundAtTransform(SOLVING_SOUND, transform);
 		if (solved) return;
 		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);

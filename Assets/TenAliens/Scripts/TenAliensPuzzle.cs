@@ -1,8 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TenAliensPuzzle {
+	public static readonly Dictionary<int, string> aliensNames = new Dictionary<int, string>() {
+		{ 1, "blue" },
+		{ 2, "green" },
+		{ 3, "cyan" },
+		{ 4, "red" },
+		{ 5, "magenta" },
+		{ 6, "yellow" },
+	};
+
 	public struct Alien {
 		public bool red;
 		public bool green;
@@ -26,17 +37,88 @@ public class TenAliensPuzzle {
 		public HashSet<Alien> south = new HashSet<Alien>();
 		public HashSet<Alien> north = new HashSet<Alien>();
 		public int usedEnergy = 0;
-		public void transfer(int alienLevel, int usedEnergy = 8) {
-			// Debug.Log(string.Format("transfer {0} for {1}", alienLevel, usedEnergy));
+		public readonly List<KeyValuePair<Alien, Alien?>> teleportsHistory = new List<KeyValuePair<Alien, Alien?>>();
+		public void transfer(int alienLevel) {
+			Alien alien = _transfer(alienLevel, 8);
+			teleportsHistory.Add(new KeyValuePair<Alien, Alien?>(alien, null));
+		}
+		public void pull(int alienLevel, int byAlienLevel) {
+			Alien northAlien = north.First(s => s.level == byAlienLevel);
+			Alien transferedAlien = _transfer(alienLevel, 8 - byAlienLevel);
+			teleportsHistory.Add(new KeyValuePair<Alien, Alien?>(transferedAlien, northAlien));
+		}
+		private Alien _transfer(int alienLevel, int usedEnergy) {
 			Alien alien = south.First(s => s.level == alienLevel);
 			south.Remove(alien);
 			north.Add(alien);
 			this.usedEnergy += usedEnergy;
+			return alien;
 		}
-		public void pull(int alienLevel, int byAlienLevel) {
-			// Debug.Log(string.Format("pulling {0} by {1}", alienLevel, byAlienLevel));
-			Debug.Assert(north.Any(s => s.level == byAlienLevel));
-			transfer(alienLevel, 8 - byAlienLevel);
+		public void solve() {
+			if (south.Any(s => s.level == 6)) {
+				transfer(6);
+				if (south.Any(s => s.level == 1)) {
+					do { pull(1, 6); } while (south.Any(s => s.level == 1));
+					while (south.Any(s => s.level == 6)) pull(6, 1);
+					if (south.Any(s => s.level == 4)) {
+						pull(4, 1);
+						while (south.Any(s => s.level == 3)) pull(3, 4);
+						if (south.Any(s => s.level == 2)) {
+							pull(2, 4);
+							while (south.Any(s => s.level == 5)) pull(5, 2);
+							if (north.Any(s => s.level == 5)) {
+								while (south.Any(s => s.level == 2)) pull(2, 5);
+							} else while (south.Any(s => s.level == 2)) pull(2, 4);
+						}
+						while (south.Any(s => s.level == 4)) {
+							if (north.Any(s => s.level == 3)) pull(4, 3);
+							else if (north.Any(s => s.level == 2)) pull(4, 2);
+							else if (north.Any(s => s.level == 1)) pull(4, 1);
+						}
+						return;
+					}
+					if (south.Any(s => s.level == 2)) {
+						if (TwoToFive(this)) {
+							pull(2, 1);
+							while (south.Any(s => s.level == 5)) pull(5, 2);
+							if (north.Any(s => s.level == 5)) {
+								while (south.Any(s => s.level == 2)) pull(2, 5);
+							} else while (south.Any(s => s.level == 2)) pull(2, 1);
+							return;
+						}
+						transfer(5);
+						while (south.Any(s => s.level == 2)) pull(2, 5);
+						while (south.Any(s => s.level == 5)) pull(5, 2);
+					}
+					return;
+				}
+			}
+			if (south.Any(s => s.level == 5) && south.Any(s => s.level == 2)) {
+				transfer(5);
+				while (south.Any(s => s.level == 2)) pull(2, 5);
+				while (south.Any(s => s.level == 5)) pull(5, 2);
+				if (!south.Any(s => s.level == 4)) {
+					while (south.Any(s => s.level == 1)) pull(1, 2);
+					return;
+				}
+				pull(4, 2);
+				while (south.Any(s => s.level == 3)) pull(3, 4);
+				while (south.Any(s => s.level == 1)) pull(1, 4);
+				if (north.Any(s => s.level == 3)) {
+					while (south.Any(s => s.level == 4)) pull(4, 3);
+				} else while (south.Any(s => s.level == 4)) pull(4, 2);
+			}
+			if (south.Any(s => s.level == 4)) {
+				transfer(4);
+				while (south.Any(s => s.level == 3)) pull(3, 4);
+				while (south.Any(s => s.level == 2)) pull(2, 4);
+				while (south.Any(s => s.level == 1)) pull(1, 4);
+				while (south.Any(s => s.level == 4)) {
+					if (north.Any(s => s.level == 3)) pull(4, 3);
+					else if (north.Any(s => s.level == 2)) pull(4, 2);
+					else if (north.Any(s => s.level == 1)) pull(4, 1);
+				}
+			}
 		}
 	}
 
@@ -47,74 +129,26 @@ public class TenAliensPuzzle {
 		return use >= notUse;
 	}
 
-	public static int Generate(Alien[] aliens) {
+	public static int Generate(Alien[] aliens, Action<string> log) {
 		SaR sar = new SaR();
 		foreach (Alien alien in aliens) sar.south.Add(alien);
-		if (sar.south.Any(s => s.level == 6)) {
-			sar.transfer(6);
-			if (sar.south.Any(s => s.level == 1)) {
-				do { sar.pull(1, 6); } while (sar.south.Any(s => s.level == 1));
-				while (sar.south.Any(s => s.level == 6)) sar.pull(6, 1);
-				if (sar.south.Any(s => s.level == 4)) {
-					sar.pull(4, 1);
-					while (sar.south.Any(s => s.level == 3)) sar.pull(3, 4);
-					if (sar.south.Any(s => s.level == 2)) {
-						sar.pull(2, 4);
-						while (sar.south.Any(s => s.level == 5)) sar.pull(5, 2);
-						if (sar.north.Any(s => s.level == 5)) {
-							while (sar.south.Any(s => s.level == 2)) sar.pull(2, 5);
-						} else while (sar.south.Any(s => s.level == 2)) sar.pull(2, 4);
-					}
-					while (sar.south.Any(s => s.level == 4)) {
-						if (sar.north.Any(s => s.level == 3)) sar.pull(4, 3);
-						else if (sar.north.Any(s => s.level == 2)) sar.pull(4, 2);
-						else if (sar.north.Any(s => s.level == 1)) sar.pull(4, 1);
-					}
-					return sar.usedEnergy + 8 * sar.south.Count;
-				}
-				if (sar.south.Any(s => s.level == 2)) {
-					if (TwoToFive(sar)) {
-						sar.pull(2, 1);
-						while (sar.south.Any(s => s.level == 5)) sar.pull(5, 2);
-						if (sar.north.Any(s => s.level == 5)) {
-							while (sar.south.Any(s => s.level == 2)) sar.pull(2, 5);
-						} else while (sar.south.Any(s => s.level == 2)) sar.pull(2, 1);
-						return sar.usedEnergy + 8 * sar.south.Count;
-					}
-					sar.transfer(5);
-					while (sar.south.Any(s => s.level == 2)) sar.pull(2, 5);
-					while (sar.south.Any(s => s.level == 5)) sar.pull(5, 2);
-				}
-				return sar.usedEnergy + 8 * sar.south.Count;
+		sar.solve();
+		foreach (Alien alien in sar.south) sar.transfer(alien.level);
+		log(string.Format("   Energy level: {0}", sar.usedEnergy));
+		log("Solution:");
+		int loggingTotalEnergyUsed = 0;
+		foreach (KeyValuePair<Alien, Alien?> pair in sar.teleportsHistory) {
+			Alien alien = pair.Key;
+			loggingTotalEnergyUsed += pair.Value == null ? 8 : 8 - pair.Value.Value.level;
+			if (pair.Value == null) {
+				log(string.Format("   Self teleport by alien #{0} ({1}). Used energy: {2}", alien.id + 1, aliensNames[alien.level], loggingTotalEnergyUsed));
+			} else {
+				Alien other = pair.Value.Value;
+				log(string.Format("   Teleport alien #{0} ({1}) by alien #{2} ({3}). Used energy: {4}", alien.id + 1, aliensNames[alien.level], other.id + 1,
+					aliensNames[other.level], loggingTotalEnergyUsed));
 			}
 		}
-		if (sar.south.Any(s => s.level == 5) && sar.south.Any(s => s.level == 2)) {
-			sar.transfer(5);
-			while (sar.south.Any(s => s.level == 2)) sar.pull(2, 5);
-			while (sar.south.Any(s => s.level == 5)) sar.pull(5, 2);
-			if (!sar.south.Any(s => s.level == 4)) {
-				while (sar.south.Any(s => s.level == 1)) sar.pull(1, 2);
-				return sar.usedEnergy + 8 * sar.south.Count;
-			}
-			sar.pull(4, 2);
-			while (sar.south.Any(s => s.level == 3)) sar.pull(3, 4);
-			while (sar.south.Any(s => s.level == 1)) sar.pull(1, 4);
-			if (sar.north.Any(s => s.level == 3)) {
-				while (sar.south.Any(s => s.level == 4)) sar.pull(4, 3);
-			} else while (sar.south.Any(s => s.level == 4)) sar.pull(4, 2);
-		}
-		if (sar.south.Any(s => s.level == 4)) {
-			sar.transfer(4);
-			while (sar.south.Any(s => s.level == 3)) sar.pull(3, 4);
-			while (sar.south.Any(s => s.level == 2)) sar.pull(2, 4);
-			while (sar.south.Any(s => s.level == 1)) sar.pull(1, 4);
-			while (sar.south.Any(s => s.level == 4)) {
-				if (sar.north.Any(s => s.level == 3)) sar.pull(4, 3);
-				else if (sar.north.Any(s => s.level == 2)) sar.pull(4, 2);
-				else if (sar.north.Any(s => s.level == 1)) sar.pull(4, 1);
-			}
-		}
-		return sar.usedEnergy + 8 * sar.south.Count;
+		return sar.usedEnergy;
 	}
 
 	public readonly int initialEnergy;
@@ -136,11 +170,14 @@ public class TenAliensPuzzle {
 		return 1;
 	}
 
-	public TenAliensPuzzle(int aliensCount) {
+	public TenAliensPuzzle(int aliensCount, Action<string> log = null) {
+		if (log == null) log = (s) => Debug.LogFormat("<Ten Aliens> {0}", s);
 		this.aliensCount = aliensCount;
 		southAliens = new HashSet<Alien>(Enumerable.Range(0, aliensCount).Select(i => new Alien(i, GetRandomLevel())));
 		northAliens = new HashSet<Alien>();
-		initialEnergy = Generate(southAliens.ToArray());
+		log("Generation:");
+		foreach (Alien alien in southAliens) log(string.Format("   Alien #{0} is {1}", alien.id + 1, aliensNames[alien.level]));
+		initialEnergy = Generate(southAliens.ToArray(), log);
 		energy = initialEnergy;
 	}
 
