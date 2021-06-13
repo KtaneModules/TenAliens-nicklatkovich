@@ -134,17 +134,17 @@ public class TenAliensPuzzle {
 		foreach (Alien alien in aliens) sar.south.Add(alien);
 		sar.solve();
 		foreach (Alien alien in new HashSet<Alien>(sar.south)) sar.transfer(alien.level);
-		log(string.Format("   Energy level: {0}", sar.usedEnergy));
+		log(string.Format("Energy level: {0}", sar.usedEnergy));
 		log("Solution:");
 		int loggingTotalEnergyUsed = 0;
 		foreach (KeyValuePair<Alien, Alien?> pair in sar.teleportsHistory) {
 			Alien alien = pair.Key;
 			loggingTotalEnergyUsed += pair.Value == null ? 8 : 8 - pair.Value.Value.level;
 			if (pair.Value == null) {
-				log(string.Format("   Self teleport by alien #{0} ({1}). Used energy: {2}", alien.id + 1, aliensNames[alien.level], loggingTotalEnergyUsed));
+				log(string.Format("\tSelf teleport by alien #{0} ({1}). Used energy: {2}", alien.id + 1, aliensNames[alien.level], loggingTotalEnergyUsed));
 			} else {
 				Alien other = pair.Value.Value;
-				log(string.Format("   Teleport alien #{0} ({1}) by alien #{2} ({3}). Used energy: {4}", alien.id + 1, aliensNames[alien.level], other.id + 1,
+				log(string.Format("\tTeleport alien #{0} ({1}) by alien #{2} ({3}). Used energy: {4}", alien.id + 1, aliensNames[alien.level], other.id + 1,
 					aliensNames[other.level], loggingTotalEnergyUsed));
 			}
 		}
@@ -176,7 +176,7 @@ public class TenAliensPuzzle {
 		southAliens = new HashSet<Alien>(Enumerable.Range(0, aliensCount).Select(i => new Alien(i, GetRandomLevel())));
 		northAliens = new HashSet<Alien>();
 		log("Generation:");
-		foreach (Alien alien in southAliens) log(string.Format("   Alien #{0} is {1}", alien.id + 1, aliensNames[alien.level]));
+		foreach (Alien alien in southAliens) log(string.Format("\tAlien #{0} is {1}", alien.id + 1, aliensNames[alien.level]));
 		initialEnergy = Generate(southAliens.ToArray(), log);
 		energy = initialEnergy;
 	}

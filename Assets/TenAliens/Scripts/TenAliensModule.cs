@@ -153,16 +153,42 @@ public class TenAliensModule : MonoBehaviour {
 			if (puzzle.southAliens.Count == 0 && puzzle.energy >= 0) Solve();
 			return;
 		}
-		if (puzzle.southAliens.Any(s => s.id == holdedAlien.data.id)) {
-			PlayStartSelfTransfer(holdedAlien.transform);
-			puzzle.transfer(holdedAlien.data.id);
-			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleport himself. Energy cost: {3}. Left energy: {4}", moduleId, holdedAlien.data.id + 1,
-				TenAliensPuzzle.aliensNames[holdedAlien.data.level], 8, puzzle.energy);
-			holdedAlien.transform.localPosition += Vector3.forward * ALIEN_TRANSFER_LENGTH;
+		if (puzzle.southAliens.All(s => s.id != holdedAlien.data.id)) return;
+		if (selectedAlien != null) {
+			if (holdedAlien.data.conflict(selectedAlien.data)) {
+				selectedAlien.selected = false;
+				Debug.LogFormat("[Ten Aliens #{0}] Trying to teleport conflicted aliens: #{1} ({2}) and #{3} ({4})", moduleId, selectedAlien.data.id + 1,
+					TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[selectedAlien.data.level]);
+				selectedAlien = null;
+				holdedAlien = null;
+				Strike();
+				return;
+			}
+			PlayPull(selectedAlien.transform);
+			int holdedLevel = holdedAlien.data.level;
+			List<TenAliensPuzzle.Alien> aliens = puzzle.southAliens.Where(a => a.level == holdedLevel).ToList();
+			foreach (TenAliensPuzzle.Alien alien in aliens) puzzle.pull(alien.id, selectedAlien.data.id);
+			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleported all {3} aliens ({4}). Energy cost: {5} ({6}x{7}). Left energy: {8}", moduleId,
+				selectedAlien.data.id + 1, TenAliensPuzzle.aliensNames[selectedAlien.data.level], TenAliensPuzzle.aliensNames[holdedLevel],
+				aliens.Select(a => "#" + (a.id + 1)).Join(", "), aliens.Count * (8 - selectedAlien.data.level), aliens.Count, 8 - selectedAlien.data.level, puzzle.energy);
+			selectedAlien.selected = false;
+			selectedAlien = null;
+			foreach (AlienComponent alien in this.aliens.Where(ac => aliens.Any(a => a.id == ac.data.id))) {
+				alien.transform.localPosition += Vector3.forward * ALIEN_TRANSFER_LENGTH;
+			}
 			holdedAlien = null;
 			Energy.text = puzzle.energy.ToString();
 			if (puzzle.southAliens.Count == 0 && puzzle.energy >= 0) Solve();
+			return;
 		}
+		PlayStartSelfTransfer(holdedAlien.transform);
+		puzzle.transfer(holdedAlien.data.id);
+		Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleport himself. Energy cost: {3}. Left energy: {4}", moduleId, holdedAlien.data.id + 1,
+			TenAliensPuzzle.aliensNames[holdedAlien.data.level], 8, puzzle.energy);
+		holdedAlien.transform.localPosition += Vector3.forward * ALIEN_TRANSFER_LENGTH;
+		holdedAlien = null;
+		Energy.text = puzzle.energy.ToString();
+		if (puzzle.southAliens.Count == 0 && puzzle.energy >= 0) Solve();
 	}
 
 	private void SetAlienInitialPosition(AlienComponent alien) {
