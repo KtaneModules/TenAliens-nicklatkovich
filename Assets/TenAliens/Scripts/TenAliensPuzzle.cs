@@ -133,7 +133,7 @@ public class TenAliensPuzzle {
 		SaR sar = new SaR();
 		foreach (Alien alien in aliens) sar.south.Add(alien);
 		sar.solve();
-		foreach (Alien alien in sar.south) sar.transfer(alien.level);
+		foreach (Alien alien in new HashSet<Alien>(sar.south)) sar.transfer(alien.level);
 		log(string.Format("   Energy level: {0}", sar.usedEnergy));
 		log("Solution:");
 		int loggingTotalEnergyUsed = 0;
