@@ -92,6 +92,10 @@ public class TenAliensModule : MonoBehaviour {
 		if (tap) return;
 		if (puzzle.northAliens.Count == 0) return;
 		Debug.LogFormat("[Ten Aliens #{0}] Reset module", moduleId);
+		if (selectedAlien) {
+			selectedAlien.selected = false;
+			selectedAlien = null;
+		}
 		foreach (AlienComponent alien in aliens) SetAlienInitialPosition(alien);
 		if (solved && puzzle.southAliens.Count == 0 && puzzle.energy >= 0) {
 			puzzle = new TenAliensPuzzle(10);
@@ -142,8 +146,8 @@ public class TenAliensModule : MonoBehaviour {
 			}
 			PlayPull(holdedAlien.transform);
 			puzzle.pull(holdedAlien.data.id, selectedAlien.data.id);
-			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleported by alien #{3} ({4}). Energy cost: {5}. Left energy: {6}", moduleId, selectedAlien.data.id + 1,
-				TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[holdedAlien.data.level],
+			Debug.LogFormat("[Ten Aliens #{0}] Alien #{1} ({2}) teleported by alien #{3} ({4}). Energy cost: {5}. Left energy: {6}", moduleId, holdedAlien.data.id + 1,
+				TenAliensPuzzle.aliensNames[holdedAlien.data.level], selectedAlien.data.id + 1, TenAliensPuzzle.aliensNames[selectedAlien.data.level],
 				8 - selectedAlien.data.level, puzzle.energy);
 			selectedAlien.selected = false;
 			selectedAlien = null;
