@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class TenAliensModule : MonoBehaviour {
@@ -14,6 +16,16 @@ public class TenAliensModule : MonoBehaviour {
 
 	private static int moduleIdCounter = 1;
 
+	public readonly string TwitchHelpMessage = new[] {
+		"\"!{0} hold 1\" or \"!{0} hold south red\" - hold any alien by its id or by its position and color",
+		"Alien's id - number from 1 to 10 in reading order, if alien's position (bank) changed id stays the same",
+		"Possible positions: south (s); north (n)",
+		"Possible colors: red (r); green (g); blue (b); yellow (y); magenta (m); cyan (c)",
+		"\"!{0} tap 1\" or \"!{0} tap n g\" - tap alien",
+		"\"!{0} reset\" or \"!{0} hold reset\" - hold a reset button",
+		"Multiple commands can be separated by \";\". Example: \"!{0} hold s y; tap 7; hold s b\"",
+	}.Join(" | ");
+
 	public GameObject AliensContainer;
 	public TextMesh Energy;
 	public KMSelectable Selectable;
@@ -22,6 +34,7 @@ public class TenAliensModule : MonoBehaviour {
 	public KMAudio Audio;
 	public AlienComponent AlienPrefab;
 
+	private bool shouldStrike = true;
 	private bool solved;
 	private bool resetHolded;
 	private int moduleId;
@@ -195,12 +208,87 @@ public class TenAliensModule : MonoBehaviour {
 		if (puzzle.southAliens.Count == 0 && puzzle.energy >= 0) Solve();
 	}
 
+	public IEnumerator ProcessTwitchCommand(string command) {
+		command = command.ToLower().Trim();
+		string regex = @"((^|;) *((hold +)?reset|(hold|tap) +(10|[1-9]|(n(orth)?|s(outh)?) +(r(ed)?|g(reen)?|b(lue)?|y(ellow)?|m(agenta)?|c(yan)?))) *)+$";
+		if (!Regex.IsMatch(command, regex)) yield break;
+		yield return null;
+		string[] commandList = command.Split(';').Select(s => s.Trim()).ToArray();
+		for (int commandIndex = 0; commandIndex < commandList.Length; commandIndex++) {
+			string cm = commandList[commandIndex];
+			if (cm.Length == 0) continue;
+			if (cm == "reset") cm = "hold reset";
+			string[] split = cm.Split(' ').Where(s => s.Length > 0).ToArray();
+			string action = split[0];
+			string target = split[1];
+			KMSelectable targetSelectable;
+			if (Regex.IsMatch(target, @"^(10|[1-9])$")) targetSelectable = aliens[int.Parse(target) - 1].Selectable;
+			else if (target == "reset") targetSelectable = ResetButton;
+			else if (Regex.IsMatch(target, @"^(s|south|n|north)$")) {
+				bool south = target.First() == 's';
+				char color = split[2].First();
+				int level = TenAliensPuzzle.nameFirstLetterToLevel[color];
+				int[] possibleIds = (south ? puzzle.southAliens : puzzle.northAliens).Where(a => a.level == level).Select(a => a.id).ToArray();
+				if (possibleIds.Length == 0) {
+					yield return "sendtochat {0}, !{1} " + TenAliensPuzzle.aliensNames[level] + " alien not found on the " + (south ? "south" : "north") + " bank";
+					yield break;
+				}
+				targetSelectable = aliens[possibleIds.PickRandom()].Selectable;
+			} else throw new System.Exception("Unable to parse command");
+			if (action == "hold") {
+				yield return targetSelectable;
+				yield return new WaitForSeconds(HOLDING);
+				yield return targetSelectable;
+			} else yield return new[] { targetSelectable };
+		}
+	}
+
+	public IEnumerator TwitchHandleForcedSolve() {
+		if (puzzle.northAliens.Count > 0) {
+			shouldStrike = false;
+			HoldReset();
+			yield return new WaitForSeconds(HOLDING);
+			UnholdReset();
+			yield return new WaitForSeconds(.1f);
+		}
+		foreach (TenAliensPuzzle.Action action in puzzle.solution) {
+			if (action.north == null) {
+				HoldAlien(aliens[puzzle.southAliens.Where(a => a.level == action.south).Select(a => a.id).PickRandom()]);
+				yield return new WaitForSeconds(HOLDING);
+				UnholdAlien();
+				yield return new WaitForSeconds(.1f);
+				continue;
+			}
+			if (action.all) {
+				HoldAlien(aliens[puzzle.northAliens.Where(a => a.level == action.north.Value).Select(a => a.id).PickRandom()]);
+				yield return new WaitForSeconds(.1f);
+				UnholdAlien();
+				yield return new WaitForSeconds(.1f);
+				HoldAlien(aliens[puzzle.southAliens.Where(a => a.level == action.south).Select(a => a.id).PickRandom()]);
+				yield return new WaitForSeconds(HOLDING);
+				UnholdAlien();
+				yield return new WaitForSeconds(.1f);
+				continue;
+			}
+			HoldAlien(aliens[puzzle.northAliens.Where(a => a.level == action.north.Value).Select(a => a.id).PickRandom()]);
+			yield return new WaitForSeconds(.1f);
+			UnholdAlien();
+			yield return new WaitForSeconds(.1f);
+			HoldAlien(aliens[puzzle.southAliens.Where(a => a.level == action.south).Select(a => a.id).PickRandom()]);
+			yield return new WaitForSeconds(.1f);
+			UnholdAlien();
+			yield return new WaitForSeconds(.1f);
+			continue;
+		}
+	}
+
 	private void SetAlienInitialPosition(AlienComponent alien) {
 		int id = alien.data.id;
 		alien.transform.localPosition = new Vector3((id % 5 - 2f) * ALIENS_OFFSET.x, ALIENS_OFFSET.y, -(id / 5 - .5f) * ALIENS_OFFSET.z - .04f);
 	}
 
 	private void Strike() {
+		if (!shouldStrike) return;
 		Audio.PlaySoundAtTransform(ALIEN_STRIKE_SOUNDS.PickRandom(), transform);
 		if (solved) return;
 		Module.HandleStrike();
