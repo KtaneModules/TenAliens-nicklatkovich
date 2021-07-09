@@ -167,12 +167,22 @@ public class TenAliensPuzzle {
 		log(string.Format("Energy level: {0}", sar.usedEnergy));
 		log("Solution:");
 		int loggingTotalEnergyUsed = 0;
+		List<string> solvingStrings = new List<string>();
 		foreach (Action action in sar.history) {
 			loggingTotalEnergyUsed += action.north == null ? 8 : 8 - action.north.Value;
-			if (action.north == null) log(string.Format("Self teleport by southern {0} alien", aliensNames[action.south]));
-			else if (action.all) log(string.Format("Teleport ALL southern {0} aliens by northern {1} alien", aliensNames[action.south], aliensNames[action.north.Value]));
-			else log(string.Format("Teleport ONE southern {0} alien by northern {1} alien", aliensNames[action.south], aliensNames[action.north.Value]));
+			string alienName = aliensNames[action.south];
+			if (action.north == null) {
+				log(string.Format("Self teleport by southern {0} alien", alienName));
+				solvingStrings.Add(string.Format("hold s {0}", alienName[0]));
+			} else if (action.all) {
+				log(string.Format("Teleport ALL southern {0} aliens by northern {1} alien", aliensNames[action.south], aliensNames[action.north.Value]));
+				solvingStrings.Add(string.Format("tap n {0};hold s {1}", aliensNames[action.north.Value][0], alienName[0]));
+			} else {
+				log(string.Format("Teleport ONE southern {0} alien by northern {1} alien", aliensNames[action.south], aliensNames[action.north.Value]));
+				solvingStrings.Add(string.Format("tap n {0};tap s {1}", aliensNames[action.north.Value][0], alienName[0]));
+			}
 		}
+		log(string.Format("TP solving string: {0}", solvingStrings.Join(";")));
 		solution = sar.history;
 		return sar.usedEnergy;
 	}
