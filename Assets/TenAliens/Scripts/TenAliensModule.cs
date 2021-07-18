@@ -151,7 +151,7 @@ public class TenAliensModule : MonoBehaviour {
 			if (holdedAlien.data.conflict(selectedAlien.data)) {
 				selectedAlien.selected = false;
 				Debug.LogFormat("[Ten Aliens #{0}] Trying to teleport conflicted aliens: #{1} ({2}) and #{3} ({4})", moduleId, selectedAlien.data.id + 1,
-					TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[selectedAlien.data.level]);
+					TenAliensPuzzle.aliensNames[selectedAlien.data.level], holdedAlien.data.id + 1, TenAliensPuzzle.aliensNames[holdedAlien.data.level]);
 				selectedAlien = null;
 				holdedAlien = null;
 				Strike();
