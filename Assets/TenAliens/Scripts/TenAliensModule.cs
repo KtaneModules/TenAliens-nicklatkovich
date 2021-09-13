@@ -210,7 +210,7 @@ public class TenAliensModule : MonoBehaviour {
 
 	public IEnumerator ProcessTwitchCommand(string command) {
 		command = command.ToLower().Trim();
-		string regex = @"((^|;) *((hold +)?reset|(hold|tap) +(10|[1-9]|(n(orth)?|s(outh)?) +(r(ed)?|g(reen)?|b(lue)?|y(ellow)?|m(agenta)?|c(yan)?))) *)+$";
+		string regex = @"^((^|;) *((hold +)?reset|(hold|tap) +(10|[1-9]|(n(orth)?|s(outh)?) +(r(ed)?|g(reen)?|b(lue)?|y(ellow)?|m(agenta)?|c(yan)?))) *)+$";
 		if (!Regex.IsMatch(command, regex)) yield break;
 		yield return null;
 		string[] commandList = command.Split(';').Select(s => s.Trim()).ToArray();
